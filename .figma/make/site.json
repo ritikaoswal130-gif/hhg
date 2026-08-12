@@ -1,0 +1,10 @@
+{
+  "description": "Effortlessly create personalized X profile frames and Builder ID cards for Hacker House Goa 2026 by uploading your photo and customizing your details.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
