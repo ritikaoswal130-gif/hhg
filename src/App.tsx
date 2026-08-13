@@ -1555,7 +1555,13 @@ export default function App() {
 
   // 2. Generate QR Code image url whenever details change
   useEffect(() => {
-    const baseUrl = window.location.origin + window.location.pathname
+    let baseUrl = window.location.origin + window.location.pathname
+    
+    // Redirect phone scans to public live GitHub Pages URL during localhost testing
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      baseUrl = 'https://ritikaoswal130-gif.github.io/hhg/'
+    }
+
     const params = new URLSearchParams()
     params.set('scan', 'true')
     params.set('name', name || 'Anon Builder')
@@ -2392,7 +2398,9 @@ export default function App() {
                           <span>Coordinates: {userPinCoords.x}%, {userPinCoords.y}% (Map click active)</span>
                         </div>
                         <div className="text-[8.5px] font-mono text-emerald-450/70 mt-1 leading-normal">
-                          💡 Your pin will be automatically placed on the map once you download or share your badge.
+                          Your pin will be automatically placed on the map once you download or share your badge.
+                          <br />
+                          Note: In local testing, QR codes redirect to the public pages URL so phone camera scans resolve successfully.
                         </div>
                       </div>
                     </div>
