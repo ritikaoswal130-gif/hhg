@@ -689,7 +689,8 @@ function SVGBarcode({ value, color }: { value: string; color: string }) {
 function BadgeCardComponent({
   image, name, role, builderTitle, theme, stickers, frameShape, bgPattern,
   photoZoom, photoX, photoY, sideTextLeft, sideTextRight, barcodeVal, qrCodeUrl,
-  badgeRef, activeSticker, onMoveSticker, onRemoveSticker, onActivateSticker, isWearableMode
+  badgeRef, activeSticker, onMoveSticker, onRemoveSticker, onActivateSticker, isWearableMode,
+  avatar
 }: {
   image: string | null
   name: string
@@ -712,6 +713,7 @@ function BadgeCardComponent({
   onRemoveSticker: (id: string) => void
   onActivateSticker: (id: string | null) => void
   isWearableMode: boolean
+  avatar?: string
 }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
   const [glare, setGlare] = useState({ x: 50, y: 50 })
@@ -2763,6 +2765,7 @@ export default function App() {
                       onRemoveSticker={removeSticker}
                       onActivateSticker={setActiveSticker}
                       isWearableMode={isWearableMode}
+                      avatar={avatarType}
                     />
                   ) : (
                     <PfpPreviewComponent
@@ -2852,6 +2855,7 @@ export default function App() {
                 onRemoveSticker={() => {}}
                 onActivateSticker={() => {}}
                 isWearableMode={false}
+                avatar={scannedProfile.avatar}
               />
             </div>
 
