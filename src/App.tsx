@@ -1467,6 +1467,7 @@ export default function App() {
   const [avatarType, setAvatarType] = useState('m1')
   const [locationName, setLocationName] = useState('Anjuna Beach')
   const [userPinCoords, setUserPinCoords] = useState({ x: 44, y: 38 })
+  const [showInstructions, setShowInstructions] = useState(true)
 
   const [themeIdx, setThemeIdx] = useState(0)
   const [frameShape, setFrameShape] = useState<FrameShape>('arch')
@@ -2128,26 +2129,64 @@ export default function App() {
               <section className="lg:col-span-7 glass-panel rounded-2xl p-5 sm:p-6 flex flex-col gap-6 shadow-xl z-10">
                 <div>
                   <span className="text-[10px] font-mono text-[#fed215] tracking-[0.2em] uppercase font-bold">Badge customizer</span>
-                  <h2 className="text-2xl font-bold tracking-wide text-white mt-1">Design Studio</h2>
-                  <p className="text-xs text-emerald-200/60 mt-1 leading-relaxed">
-                    Design a wearable badge for Hacker House Goa 2026. Custom QR codes map your profile details & drop your custom avatar onto the interactive Goa Map!
-                  </p>
+                  <div className="flex items-center justify-between mt-1 flex-wrap gap-2">
+                    <h2 className="text-2xl font-bold tracking-wide text-white">Design Studio</h2>
+                    <button 
+                      type="button"
+                      onClick={() => setShowInstructions(!showInstructions)}
+                      className="text-[9px] font-mono text-pink-400 border border-pink-500/30 hover:border-pink-500 bg-[#ff007f]/5 px-2.5 py-1 rounded-md transition-all cursor-pointer font-bold uppercase tracking-wider select-none"
+                    >
+                      {showInstructions ? 'Hide Help ✕' : 'How it works? 💡'}
+                    </button>
+                  </div>
+                  
+                  {showInstructions && (
+                    <div className="mt-3.5 border border-[#fed215]/20 bg-[#021d13]/85 rounded-xl p-3.5 sm:p-4 text-emerald-250 animate-[fade-slide-down_0.3s_ease]">
+                      <h3 className="text-xs font-bold font-mono text-[#fed215] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        ⚡ residency badge checklist:
+                      </h3>
+                      <ol className="text-[11px] font-mono flex flex-col gap-2 list-none p-0 m-0">
+                        <li className="flex gap-2">
+                          <span className="text-[#ff007f] font-bold">01.</span>
+                          <span><strong>Customize Badge:</strong> Set your name, role, custom bio/hobbies, and upload a portrait photo. Pick an avatar representing yourself.</span>
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="text-[#ff007f] font-bold">02.</span>
+                          <span><strong>Drop Location Pin:</strong> Type your hacking town/villa under <em>Hacking Location</em>, or <strong>click directly on the Goa map</strong> below to set your pin coordinates. Click <strong>Drop Pin</strong> to upload it to the live server.</span>
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="text-[#ff007f] font-bold">03.</span>
+                          <span><strong>Verified QR Scanner:</strong> The badge embeds a dynamic QR Code. When someone scans your badge, it loads your verified hacker bio, socials, and beach pin.</span>
+                        </li>
+                        <li className="flex gap-2">
+                          <span className="text-[#ff007f] font-bold">04.</span>
+                          <span><strong>Download & Share:</strong> Click <strong>Download PNG & Pin Map</strong> to download a flat high-res card and automatically pin yourself on the shared map!</span>
+                        </li>
+                      </ol>
+                    </div>
+                  )}
+
+                  {!showInstructions && (
+                    <p className="text-xs text-emerald-200/60 mt-1.5 leading-relaxed">
+                      Design a wearable badge for Hacker House Goa 2026. Custom QR codes map your profile details & drop your custom avatar onto the interactive Goa Map!
+                    </p>
+                  )}
                 </div>
 
                 {/* Navigation Sub-Tabs inside editor */}
-                <div className="flex border-b border-emerald-900 pb-2 gap-2 overflow-x-auto">
+                <div className="flex border-b border-emerald-900 pb-2.5 gap-2.5 overflow-x-auto scrollbar-thin">
                   {(['profile', 'frame', 'theme', 'stickers'] as const).map(tab => (
                     <button
                       type="button"
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`text-[10px] font-mono tracking-[0.15em] uppercase pb-2 px-1 border-b-2 cursor-pointer transition-all whitespace-nowrap ${
+                      className={`text-[10px] font-mono tracking-[0.15em] uppercase py-1.5 px-3 rounded-lg border cursor-pointer transition-all whitespace-nowrap ${
                         activeTab === tab 
-                          ? 'border-[#ff007f] text-white font-bold' 
-                          : 'border-transparent text-emerald-500 hover:text-emerald-300'
+                          ? 'border-[#ff007f] bg-[#ff007f]/10 text-white font-bold shadow-sm shadow-[#ff007f]/10' 
+                          : 'border-transparent text-emerald-500 hover:text-emerald-300 hover:bg-emerald-950/20'
                       }`}
                     >
-                      {tab === 'profile' ? 'Identity' : tab === 'frame' ? 'Position' : tab === 'theme' ? 'Vibe / Theme' : 'Stickers'}
+                      {tab === 'profile' ? '👤 Identity' : tab === 'frame' ? '📐 Position' : tab === 'theme' ? '🎨 Vibe / Theme' : '✨ Stickers'}
                     </button>
                   ))}
                 </div>
