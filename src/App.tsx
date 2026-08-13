@@ -718,8 +718,9 @@ function BadgeCardComponent({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handlePointerMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current || isWearableMode) return
-    const rect = containerRef.current.getBoundingClientRect()
+    const currentRef = badgeRef?.current || containerRef.current
+    if (!currentRef || isWearableMode) return
+    const rect = currentRef.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     
