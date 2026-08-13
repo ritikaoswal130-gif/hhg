@@ -1218,7 +1218,7 @@ function GoaResidencyMap({
         >
           {/* Visual click target help */}
           <div className="absolute top-2 left-2 pointer-events-none text-[8.5px] font-mono text-pink-400 bg-pink-950/80 px-2 py-0.5 rounded border border-pink-900/60 z-30">
-            📍 Click anywhere to set your map pin position!
+            Click anywhere to set your map pin position!
           </div>
 
           {/* Sea / Coastline Vector Layout */}
@@ -1278,7 +1278,7 @@ function GoaResidencyMap({
                     textAnchor="start"
                     className="transition-all duration-300 font-bold"
                   >
-                    {beach.label.toUpperCase()} {isTargetHighlight && '📍'}
+                    {beach.label.toUpperCase()} {isTargetHighlight && '(Selected)'}
                   </text>
                   <circle 
                     cx={`${beach.x}%`} 
@@ -1341,7 +1341,7 @@ function GoaResidencyMap({
                   <AvatarIcon type={userAvatar || 'm1'} size={38} />
                 </div>
                 <div className="absolute top-[110%] left-1/2 -translate-x-1/2 bg-pink-900 border border-pink-500 px-1.5 py-0.5 rounded text-[7.5px] font-mono text-white whitespace-nowrap shadow-md uppercase font-bold">
-                  Pin Preview 📍
+                  Pin Preview
                 </div>
               </div>
             )}
@@ -2054,16 +2054,13 @@ export default function App() {
             </div>
             
             {/* CTA Trigger */}
-            <div className="mt-8 pt-5 border-t border-emerald-900/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="text-[9px] font-mono bg-pink-950/40 border border-[#ff007f]/30 px-3.5 py-1.5 text-[#ff007f] rounded-full font-bold uppercase tracking-wider shadow-inner">
-                ⚠️ Deadline: 11:59 pm, 13th August 2026
-              </span>
+            <div className="mt-8 pt-5 border-t border-emerald-900/60 flex justify-center">
               <button
                 type="button"
                 onClick={() => setView('builder')}
                 className="btn-spring relative bg-gradient-to-r from-[#fed215] via-[#ff007f] to-[#fed215] text-[#021a11] font-mono font-bold tracking-[0.2em] py-3.5 px-8 rounded-full text-xs cursor-pointer shadow-[0_0_20px_rgba(255,0,127,0.3)] hover:shadow-[0_0_25px_rgba(255,0,127,0.55)] uppercase transition-all duration-300 hover:brightness-110 active:scale-95"
               >
-                Launch Badge Studio 🚀
+                Launch Badge Studio
               </button>
             </div>
           </div>
@@ -2120,7 +2117,7 @@ export default function App() {
                 }}
                 className="px-3 py-1.5 rounded-lg text-xs font-mono border border-pink-600 bg-pink-700/10 hover:bg-pink-700/20 text-pink-300 cursor-pointer shadow-sm font-bold"
               >
-                📍 View Map
+                View Map
               </button>
               <button 
                 type="button"
@@ -2155,14 +2152,14 @@ export default function App() {
                       onClick={() => setShowInstructions(!showInstructions)}
                       className="text-[9px] font-mono text-pink-400 border border-pink-500/30 hover:border-pink-500 bg-[#ff007f]/5 px-2.5 py-1 rounded-md transition-all cursor-pointer font-bold uppercase tracking-wider select-none"
                     >
-                      {showInstructions ? 'Hide Help ✕' : 'How it works? 💡'}
+                      {showInstructions ? 'Hide Help' : 'How it works'}
                     </button>
                   </div>
                   
                   {showInstructions && (
                     <div className="mt-3.5 border border-[#fed215]/20 bg-[#021d13]/85 rounded-xl p-3.5 sm:p-4 text-emerald-250 animate-[fade-slide-down_0.3s_ease]">
                       <h3 className="text-xs font-bold font-mono text-[#fed215] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        ⚡ residency badge checklist:
+                        residency badge checklist:
                       </h3>
                       <ol className="text-[11px] font-mono flex flex-col gap-2 list-none p-0 m-0">
                         <li className="flex gap-2">
@@ -2171,7 +2168,7 @@ export default function App() {
                         </li>
                         <li className="flex gap-2">
                           <span className="text-[#ff007f] font-bold">02.</span>
-                          <span><strong>Drop Location Pin:</strong> Type your hacking town/villa under <em>Hacking Location</em>, or <strong>click directly on the Goa map</strong> below to set your pin coordinates. Click <strong>Drop Pin</strong> to upload it to the live server.</span>
+                          <span><strong>Position Map Pin:</strong> Type your hacking town/villa under <em>Hacking Location</em>, or <strong>click directly on the Goa map</strong> below to set your pin coordinates. Your pin is saved to the live server automatically when you download or share.</span>
                         </li>
                         <li className="flex gap-2">
                           <span className="text-[#ff007f] font-bold">03.</span>
@@ -2205,7 +2202,7 @@ export default function App() {
                           : 'border-transparent text-emerald-500 hover:text-emerald-300 hover:bg-emerald-950/20'
                       }`}
                     >
-                      {tab === 'profile' ? '👤 Identity' : tab === 'frame' ? '📐 Position' : tab === 'theme' ? '🎨 Vibe / Theme' : '✨ Stickers'}
+                      {tab === 'profile' ? 'Identity' : tab === 'frame' ? 'Position' : tab === 'theme' ? 'Vibe / Theme' : 'Stickers'}
                     </button>
                   ))}
                 </div>
@@ -2939,7 +2936,7 @@ export default function App() {
                     }}
                     className="py-2.5 rounded-xl border border-pink-600/50 bg-pink-700/10 hover:bg-pink-700/20 text-pink-300 font-mono text-[10px] font-bold cursor-pointer transition-all"
                   >
-                    📍 View on Map
+                    View on Map
                   </button>
                   
                   <button
