@@ -1513,6 +1513,7 @@ export default function App() {
 
   // Dynamic QR Code link URL
   const [qrCodeUrl, setQrCodeUrl] = useState('')
+  const [toastMsg, setToastMsg] = useState('')
 
   // Map Pins state (mock pins + current user pin)
   const [mapPins, setMapPins] = useState<MapPin[]>([])
@@ -1824,60 +1825,45 @@ export default function App() {
     }
   }
 
-  const shareOnX = async () => {
+  const shareOnX = () => {
     const targetRef = format === 'id' ? badgeRef : pfpRef
     if (!targetRef.current) return
     
-    // Open a blank window synchronously inside user click event to bypass browser popup blockers
-    const popup = window.open('about:blank', '_blank')
-    if (popup) {
-      popup.document.write(`
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background-color:#021a11;color:#f7f4ea;font-family:monospace;text-align:center;padding:20px;margin:0;">
-          <h2 style="color:#fed215;margin-bottom:10px;font-size:16px;letter-spacing:1px;">Hacker House Goa</h2>
-          <p style="font-size:12px;opacity:0.8;margin:5px 0;">Preparing your share link...</p>
-          <p style="font-size:10px;opacity:0.5;">Copying badge to clipboard...</p>
-        </div>
-      `)
-    }
-
-    saveUserPinToMap() // Proactively save to the map when they share!
+    // 1. Proactively drop the user's pin on the map
+    saveUserPinToMap()
     
-    let copiedToClipboard = false
-    try {
-      const dataUrl = await toPng(targetRef.current, {
-        pixelRatio: 2,
-        style: {
-          transform: 'none',
-        }
-      })
-      
-      const res = await fetch(dataUrl)
-      const blob = await res.blob()
-      
-      if (navigator.clipboard && window.ClipboardItem) {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'image/png': blob
-          })
-        ])
-        copiedToClipboard = true
-      }
-    } catch (e) {
-      console.warn("Clipboard write failed or not supported in iframe:", e)
-    }
-
+    // 2. Open X immediately in a new tab (0ms delay, bypasses popup blocker)
     const tweetText = `Just created my Hacker House Goa 2026 Residency Badge! Excited to ship at the beach! 🌴🦀💻\n\nCreate your badge/PFP overlay here: https://hhg-umber.vercel.app\n#FrameInGoa #HackerHouseGoa`
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
-
-    if (popup) {
-      popup.location.href = shareUrl
-    } else {
-      window.open(shareUrl, '_blank')
-    }
-
-    if (copiedToClipboard) {
-      alert("Badge image copied to clipboard! You can paste (Ctrl+V) it directly inside the X composer text box to attach it.")
-    }
+    window.open(shareUrl, '_blank')
+    
+    // 3. Asynchronously render the badge card and copy to clipboard in the background
+    // We use a fast rendering factor (pixelRatio: 1.5) so it finishes within 100-200ms in the background
+    setTimeout(async () => {
+      try {
+        const dataUrl = await toPng(targetRef.current!, {
+          pixelRatio: 1.5,
+          style: {
+            transform: 'none',
+          }
+        })
+        
+        const res = await fetch(dataUrl)
+        const blob = await res.blob()
+        
+        if (navigator.clipboard && window.ClipboardItem) {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blob
+            })
+          ])
+          setToastMsg("Badge image copied to clipboard! Paste it inside X.")
+          setTimeout(() => setToastMsg(''), 4500)
+        }
+      } catch (e) {
+        console.warn("Background clipboard write failed:", e)
+      }
+    }, 50)
   }
 
   // Calculate mouse position percentage across screen (0 to 1) for the sunset beach animation
@@ -2989,6 +2975,16 @@ export default function App() {
       <footer className="py-6 text-center text-[10px] text-emerald-500 font-mono border-t border-emerald-950 mt-auto z-20">
         Hacker House Goa · 2026 Residency Badge Builder. Built for Gen Z shippers.
       </footer>
+
+      {/* Floating Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 bg-[#ff007f] text-[#f7f4ea] border border-pink-500/40 px-5 py-3.5 rounded-xl font-mono text-xs shadow-[0_4px_20px_rgba(255,0,127,0.35)] z-50 animate-[fade-slide-up_0.3s_ease]">
+          <div className="flex items-center gap-2 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            {toastMsg}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
