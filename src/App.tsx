@@ -1717,7 +1717,9 @@ export default function App() {
     setFrameShape(['arch', 'shield', 'circle', 'classic'][Math.floor(Math.random() * 4)] as FrameShape)
     setBgPattern(['zebra', 'paisley', 'grid'][Math.floor(Math.random() * 3)])
     setAvatarType(['m1', 'm2', 'm3', 'f1', 'f2', 'f3'][Math.floor(Math.random() * 6)])
-    setBeachLocation(['arambol', 'morjim', 'anjuna', 'candolim', 'panaji', 'palolem'][Math.floor(Math.random() * 6)])
+    const randomBeach = BEACH_LOCATIONS[Math.floor(Math.random() * BEACH_LOCATIONS.length)]
+    setLocationName(randomBeach.label)
+    setUserPinCoords({ x: randomBeach.x, y: randomBeach.y })
     
     const sideTextsL = ["SHIP IT HARD", "WAGMI GOA", "CHAI ONLY", "10X SOLVER", "ZERO SLACK", "CODE SUNSET"]
     const sideTextsR = ["VIBES ONLY", "BUILD GOA", "ON-CHAIN", "AI AGENT", "DECENTRAL", "SHROOM VIBE"]
