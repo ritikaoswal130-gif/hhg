@@ -1559,9 +1559,9 @@ export default function App() {
   useEffect(() => {
     let baseUrl = window.location.origin + window.location.pathname
     
-    // Redirect phone scans to public live GitHub Pages URL during localhost testing
+    // Redirect phone scans to public live Vercel URL during localhost testing
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      baseUrl = 'https://ritikaoswal130-gif.github.io/hhg/'
+      baseUrl = 'https://hhg-umber.vercel.app/'
     }
 
     const params = new URLSearchParams()
@@ -1860,7 +1860,7 @@ export default function App() {
       alert("Opening X composer... Make sure to download your badge first and attach it to your post!")
     }
 
-    const tweetText = `Just created my Hacker House Goa 2026 Residency Badge! Excited to ship at the beach! 🌴🦀💻\n\nCreate your badge/PFP overlay here: https://hhg-badge.figma.make\n#FrameInGoa #HackerHouseGoa`
+    const tweetText = `Just created my Hacker House Goa 2026 Residency Badge! Excited to ship at the beach! 🌴🦀💻\n\nCreate your badge/PFP overlay here: https://hhg-umber.vercel.app\n#FrameInGoa #HackerHouseGoa`
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
     window.open(shareUrl, '_blank')
   }
