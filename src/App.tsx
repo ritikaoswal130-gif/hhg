@@ -410,6 +410,30 @@ function SparkleSVG({ color, size = 20 }: { color: string; size?: number }) {
   )
 }
 
+function PalmLeafSVG({ color, size = 180 }: { color: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" opacity="0.08" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 90 Q 50 50 90 10" stroke={color} strokeWidth="3" strokeLinecap="round" />
+      <path d="M30 70 Q 15 50 10 30" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path d="M40 60 Q 25 40 20 20" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path d="M50 50 Q 35 30 30 10" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path d="M60 40 Q 50 15 55 5" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path d="M70 30 Q 75 15 80 5" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <path d="M80 20 Q 90 15 95 10" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function FloatingLotus({ color, size = 120 }: { color: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" opacity="0.08" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 4C16 4 19 12 21 15C23 18 26 21 28 20C27 24 23 26 19 25C17 24.5 16.5 22 16 22C15.5 22 15 24.5 13 25C9 26 5 24 4 20C6 21 9 18 11 15C13 12 16 4 16 4Z" fill={color} />
+      <path d="M16 22V28" stroke={color} strokeWidth="2" strokeLinecap="round" />
+      <circle cx="16" cy="22" r="2.5" fill={color} />
+    </svg>
+  )
+}
+
 function SilhouettedPalmTree({ position, swayOffset }: { position: 'left' | 'right'; swayOffset: number }) {
   return (
     <svg 
