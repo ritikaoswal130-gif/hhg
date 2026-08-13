@@ -2388,20 +2388,13 @@ export default function App() {
                           ))}
                         </datalist>
                         
-                        <div className="text-[9px] font-mono text-emerald-350/80 leading-normal mt-0.5">
-                          📍 Coordinates: {userPinCoords.x}%, {userPinCoords.y}% (Click map below to position pin)
+                        <div className="text-[9px] font-mono text-emerald-350/85 leading-normal mt-1 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
+                          <span>Coordinates: {userPinCoords.x}%, {userPinCoords.y}% (Map click active)</span>
                         </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            saveUserPinToMap()
-                            alert(`Pin dropped on map at ${locationName}! Scroll down to see your location in Goa.`)
-                          }}
-                          className="btn-spring mt-1.5 py-1 px-3 bg-[#ff007f]/10 border border-[#ff007f] text-[#ff007f] hover:bg-[#ff007f]/20 rounded-lg text-[9px] font-mono font-bold tracking-wider cursor-pointer shadow"
-                        >
-                          📌 Drop Pin on Map
-                        </button>
+                        <div className="text-[8.5px] font-mono text-emerald-450/70 mt-1 leading-normal">
+                          💡 Your pin will be automatically placed on the map once you download or share your badge.
+                        </div>
                       </div>
                     </div>
 
