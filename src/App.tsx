@@ -4,7 +4,7 @@ import {
 } from 'react'
 import heic2any from 'heic2any'
 import { toPng } from 'html-to-image'
-import QRCode from 'qrcode'
+import { toDataURL } from 'qrcode'
 
 /* ─── Event Custom Themes ──────────────────────────────── */
 interface ThemePreset {
@@ -1494,7 +1494,7 @@ export default function App() {
 
     const scanUrl = `${baseUrl}?${params.toString()}`
 
-    QRCode.toDataURL(scanUrl, {
+    toDataURL(scanUrl, {
       margin: 1,
       width: 120,
       color: {
