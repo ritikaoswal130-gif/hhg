@@ -1522,8 +1522,8 @@ export default function App() {
       margin: 1,
       width: 120,
       color: {
-        dark: activeTheme.textColor,
-        light: '#ffffff00' // Transparent
+        dark: '#021a11', // High contrast dark green/black
+        light: '#ffffff' // White background
       }
     }).then(url => {
       setQrCodeUrl(url)
