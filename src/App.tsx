@@ -146,9 +146,17 @@ const STICKER_COLORS = [
 const BEACH_LOCATIONS = [
   { id: 'arambol', label: 'Arambol Beach', x: 30, y: 12 },
   { id: 'morjim', label: 'Morjim Beach', x: 38, y: 24 },
+  { id: 'siolim', label: 'Siolim Town', x: 42, y: 20 },
+  { id: 'assagao', label: 'Assagao Village', x: 45, y: 26 },
+  { id: 'vagator', label: 'Vagator Beach', x: 41, y: 32 },
   { id: 'anjuna', label: 'Anjuna Beach', x: 44, y: 38 },
+  { id: 'baga', label: 'Baga Beach', x: 47, y: 41 },
+  { id: 'calangute', label: 'Calangute Beach', x: 49, y: 44 },
   { id: 'candolim', label: 'Candolim Beach', x: 50, y: 48 },
+  { id: 'porvorim', label: 'Porvorim Hub', x: 55, y: 52 },
   { id: 'panaji', label: 'Panaji Capital', x: 58, y: 58 },
+  { id: 'vasco', label: 'Vasco da Gama', x: 50, y: 68 },
+  { id: 'margao', label: 'Margao City', x: 65, y: 78 },
   { id: 'palolem', label: 'Palolem Beach', x: 76, y: 86 }
 ]
 
@@ -1135,13 +1143,19 @@ function GoaResidencyMap({
   selectedPinId,
   onSelectPin,
   highlightedBeach,
-  userPinLocation
+  userPinLocation,
+  userPinCoords,
+  userAvatar,
+  onMapClick
 }: {
   pins: MapPin[]
   selectedPinId: string | null
   onSelectPin: (pin: MapPin | null) => void
   highlightedBeach?: string
   userPinLocation?: string
+  userPinCoords?: { x: number; y: number }
+  userAvatar?: string
+  onMapClick?: (x: number, y: number) => void
 }) {
   const [filterRole, setFilterRole] = useState('All')
   const selectedPin = pins.find(p => p.id === selectedPinId)
@@ -1187,8 +1201,25 @@ function GoaResidencyMap({
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch min-h-[380px]">
         {/* Left Side: Dynamic Interactive Coastline SVG Canvas Map */}
-        <div className="lg:col-span-8 relative bg-emerald-950/40 rounded-2xl border border-emerald-900/60 overflow-hidden h-[380px] select-none flex items-center justify-center">
-          
+        <div 
+          onClick={(e) => {
+            if (!onMapClick) return
+            const target = e.target as HTMLElement
+            const currentTarget = e.currentTarget as HTMLElement
+            if (target === currentTarget || target.tagName === 'svg' || target.tagName === 'path' || target.tagName === 'rect' || target.tagName === 'text' || target.tagName === 'circle') {
+              const rect = currentTarget.getBoundingClientRect()
+              const x = Math.round(((e.clientX - rect.left) / rect.width) * 100)
+              const y = Math.round(((e.clientY - rect.top) / rect.height) * 100)
+              onMapClick(x, y)
+            }
+          }}
+          className="lg:col-span-8 relative bg-emerald-950/40 rounded-2xl border border-emerald-900/60 overflow-hidden h-[380px] select-none flex items-center justify-center cursor-crosshair"
+        >
+          {/* Visual click target help */}
+          <div className="absolute top-2 left-2 pointer-events-none text-[8.5px] font-mono text-pink-400 bg-pink-950/80 px-2 py-0.5 rounded border border-pink-900/60 z-30">
+            📍 Click anywhere to set your map pin position!
+          </div>
+
           {/* Sea / Coastline Vector Layout */}
           <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -1297,6 +1328,22 @@ function GoaResidencyMap({
                 </div>
               )
             })}
+
+            {/* Pulsing Pin Preview showing active pointer coords */}
+            {userPinCoords && (
+              <div
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 z-35 animate-[pulse_1.5s_infinite] pointer-events-none"
+                style={{ left: `${userPinCoords.x}%`, top: `${userPinCoords.y}%` }}
+              >
+                <div className="absolute -inset-3 rounded-full border border-pink-400 animate-ping opacity-75" />
+                <div className="p-0.5 rounded-full border-2 border-[#ff007f] bg-emerald-950 shadow-lg shadow-pink-500/50">
+                  <AvatarIcon type={userAvatar || 'm1'} size={38} />
+                </div>
+                <div className="absolute top-[110%] left-1/2 -translate-x-1/2 bg-pink-900 border border-pink-500 px-1.5 py-0.5 rounded text-[7.5px] font-mono text-white whitespace-nowrap shadow-md uppercase font-bold">
+                  Pin Preview 📍
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="absolute bottom-2 left-2 flex gap-4 text-[8px] font-mono text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-lg border border-emerald-900/60 pointer-events-none">
@@ -1414,10 +1461,11 @@ export default function App() {
   const [github, setGithub] = useState('')
   const [twitter, setTwitter] = useState('')
   
-  // Bio and avatar selections for Goa map & scan view
+  // Bio, custom location name, and avatar selections for Goa map & scan view
   const [bio, setBio] = useState('')
   const [avatarType, setAvatarType] = useState('m1')
-  const [beachLocation, setBeachLocation] = useState('anjuna')
+  const [locationName, setLocationName] = useState('Anjuna Beach')
+  const [userPinCoords, setUserPinCoords] = useState({ x: 44, y: 38 })
 
   const [themeIdx, setThemeIdx] = useState(0)
   const [frameShape, setFrameShape] = useState<FrameShape>('arch')
@@ -1534,9 +1582,6 @@ export default function App() {
 
   // 3. Update User pin inside Remote database and local mapPins
   const saveUserPinToMap = (updatedName?: string, updatedRole?: string) => {
-    const selectedBeachLoc = BEACH_LOCATIONS.find(b => b.id === beachLocation)
-    if (!selectedBeachLoc) return
-
     let userId = localStorage.getItem('hhg-user-id')
     if (!userId) {
       userId = 'user-' + Math.random().toString(36).slice(2)
@@ -1552,9 +1597,9 @@ export default function App() {
       tw: twitter || '',
       avatar: avatarType,
       bio: bio || 'Currently shipping code beachside at Hacker House Goa.',
-      beach: selectedBeachLoc.label,
-      x: selectedBeachLoc.x,
-      y: selectedBeachLoc.y
+      beach: locationName || 'Goa',
+      x: userPinCoords.x,
+      y: userPinCoords.y
     }
 
     // Sync with remote database on kvdb.io to keep friends' pins in sync!
@@ -1597,13 +1642,13 @@ export default function App() {
         if (Array.isArray(data)) {
           setMapPins(data)
           
-          // Set beach dropdown based on user's saved pin if available
+          // Set coordinates based on user's saved pin if available
           const userId = localStorage.getItem('hhg-user-id')
           if (userId) {
             const userSavedPin = data.find((p: MapPin) => p.id === userId)
             if (userSavedPin) {
-              const matchedBeach = BEACH_LOCATIONS.find(b => b.label === userSavedPin.beach)
-              if (matchedBeach) setBeachLocation(matchedBeach.id)
+              setLocationName(userSavedPin.beach)
+              setUserPinCoords({ x: userSavedPin.x, y: userSavedPin.y })
             }
           }
         }
@@ -2258,30 +2303,41 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Beach Placement */}
+                      {/* Custom Location Placement */}
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-[10px] font-mono text-[#fed215] tracking-wider uppercase font-bold">Hacking Location (Goa Beach)</label>
-                        <select
-                          value={beachLocation}
+                        <label className="text-[10px] font-mono text-[#fed215] tracking-wider uppercase font-bold">Hacking Location (Goa)</label>
+                        <input
+                          type="text"
+                          list="goa-places"
+                          placeholder="e.g. Vagator Beach, Assagao Villa"
+                          value={locationName}
                           onChange={(e) => {
-                            setBeachLocation(e.target.value)
-                            const targetBeach = BEACH_LOCATIONS.find(b => b.id === e.target.value)
-                            if (targetBeach) setHighlightedBeach(targetBeach.label)
-                            setSelectedPinId(null)
+                            const val = e.target.value
+                            setLocationName(val)
+                            // If they select an option that matches one of our predefined locations, jump their coordinates there!
+                            const matched = BEACH_LOCATIONS.find(b => b.label.toLowerCase() === val.toLowerCase() || b.id === val.toLowerCase())
+                            if (matched) {
+                              setUserPinCoords({ x: matched.x, y: matched.y })
+                              setHighlightedBeach(matched.label)
+                            }
                           }}
-                          className="bg-[#012619]/80 border border-emerald-800/60 rounded-lg px-3 py-2 text-xs text-[#f7f4ea] focus:outline-none focus:border-[#ff007f] shadow-sm font-mono cursor-pointer font-bold"
-                        >
+                          className="bg-[#012619]/80 border border-emerald-800/60 rounded-lg px-3 py-2 text-xs text-[#f7f4ea] focus:outline-none focus:border-[#ff007f] shadow-sm font-mono font-bold"
+                        />
+                        <datalist id="goa-places">
                           {BEACH_LOCATIONS.map(beach => (
-                            <option key={beach.id} value={beach.id} className="bg-[#021a11] text-emerald-200">
-                              {beach.label}
-                            </option>
+                            <option key={beach.id} value={beach.label} />
                           ))}
-                        </select>
+                        </datalist>
+                        
+                        <div className="text-[9px] font-mono text-emerald-350/80 leading-normal mt-0.5">
+                          📍 Coordinates: {userPinCoords.x}%, {userPinCoords.y}% (Click map below to position pin)
+                        </div>
+
                         <button
                           type="button"
                           onClick={() => {
                             saveUserPinToMap()
-                            alert("Pin dropped on map! Scroll down to see your location in Goa.")
+                            alert(`Pin dropped on map at ${locationName}! Scroll down to see your location in Goa.`)
                           }}
                           className="btn-spring mt-1.5 py-1 px-3 bg-[#ff007f]/10 border border-[#ff007f] text-[#ff007f] hover:bg-[#ff007f]/20 rounded-lg text-[9px] font-mono font-bold tracking-wider cursor-pointer shadow"
                         >
@@ -2688,7 +2744,10 @@ export default function App() {
                   setHighlightedBeach(pin ? pin.beach : '')
                 }}
                 highlightedBeach={highlightedBeach}
-                userPinLocation={BEACH_LOCATIONS.find(b => b.id === beachLocation)?.label}
+                userPinLocation={locationName}
+                userPinCoords={userPinCoords}
+                userAvatar={avatarType}
+                onMapClick={(x, y) => setUserPinCoords({ x, y })}
               />
             </div>
           </main>
