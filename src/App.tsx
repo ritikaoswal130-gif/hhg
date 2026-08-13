@@ -1513,6 +1513,7 @@ export default function App() {
 
   // Dynamic QR Code link URL
   const [qrCodeUrl, setQrCodeUrl] = useState('')
+  const [toastMsg, setToastMsg] = useState('')
 
   // Map Pins state (mock pins + current user pin)
   const [mapPins, setMapPins] = useState<MapPin[]>([])
@@ -1856,7 +1857,8 @@ export default function App() {
               'image/png': blob
             })
           ])
-          console.log("Badge image copied to clipboard in background.")
+          setToastMsg("Badge image copied to clipboard! Paste it inside X.")
+          setTimeout(() => setToastMsg(''), 4500)
         }
       } catch (e) {
         console.warn("Background clipboard write failed:", e)
@@ -2973,6 +2975,16 @@ export default function App() {
       <footer className="py-6 text-center text-[10px] text-emerald-500 font-mono border-t border-emerald-950 mt-auto z-20">
         Hacker House Goa · 2026 Residency Badge Builder. Built for Gen Z shippers.
       </footer>
+
+      {/* Floating Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 bg-[#ff007f] text-[#f7f4ea] border border-pink-500/40 px-5 py-3.5 rounded-xl font-mono text-xs shadow-[0_4px_20px_rgba(255,0,127,0.35)] z-50 animate-[fade-slide-up_0.3s_ease]">
+          <div className="flex items-center gap-2 font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            {toastMsg}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
