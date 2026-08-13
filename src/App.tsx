@@ -1973,78 +1973,97 @@ export default function App() {
           </div>
 
           {/* Instructions Box */}
-          <div className="w-full glass-panel rounded-3xl p-6 sm:p-8 shadow-xl animate-[fade-slide-up_0.6s_ease]">
-            <h3 className="text-[11px] font-mono text-[#fed215] uppercase tracking-[0.2em] font-bold border-b border-emerald-800 pb-3 mb-6">
+          <div className="w-full glass-panel rounded-3xl p-6 sm:p-8 shadow-xl animate-[fade-slide-up_0.6s_ease] border border-[#fed215]/20">
+            <h3 className="text-[11px] font-mono text-[#fed215] uppercase tracking-[0.2em] font-bold border-b border-emerald-900 pb-3 mb-6 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse" />
               Residency Task: Build Instructions
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Step 1 & 2 */}
-              <div className="flex flex-col gap-5">
-                <div className="flex gap-4 items-start">
-                  <span className="w-8 h-8 rounded-full bg-[#fed215]/10 border border-[#fed215]/30 flex items-center justify-center text-xs font-mono font-bold text-[#fed215] flex-shrink-0">
-                    01
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-[#f7f4ea]">Upload Profile Photo</h4>
-                    <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
-                      Select your photo. Supports PNG, JPG, and iPhone **HEIC** formats. Zoom and pan to fit perfectly.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 items-start">
-                  <span className="w-8 h-8 rounded-full bg-[#ff007f]/10 border border-[#ff007f]/30 flex items-center justify-center text-xs font-mono font-bold text-[#ff007f] flex-shrink-0">
-                    02
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-[#f7f4ea]">Input Identity Details</h4>
-                    <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
-                      Enter your name and developer track. Write a customized builder bio, select a cartoon avatar, and pick your Goa beach.
-                    </p>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Step 1 */}
+              <div className="flex gap-4 items-start p-4 rounded-xl border border-emerald-900/50 bg-[#012519]/30 hover:bg-[#012519]/50 transition-all hover:border-[#fed215]/30 group shadow-md hover:translate-y-[-2px] duration-300">
+                <span className="w-9 h-9 rounded-xl bg-[#fed215]/10 border border-[#fed215]/30 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <svg className="w-4 h-4 text-[#fed215]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </span>
+                <div>
+                  <h4 className="text-sm font-bold text-[#f7f4ea] font-mono tracking-wide flex items-center gap-1.5">
+                    <span>Upload Profile Photo</span>
+                    <span className="text-[8px] font-mono text-[#fed215]/75 bg-[#fed215]/5 px-1.5 py-0.5 rounded border border-[#fed215]/20 font-bold">01</span>
+                  </h4>
+                  <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
+                    Select your photo. Supports PNG, JPG, and iPhone **HEIC** formats. Zoom and pan to fit perfectly.
+                  </p>
                 </div>
               </div>
 
-              {/* Step 3 & 4 */}
-              <div className="flex flex-col gap-5">
-                <div className="flex gap-4 items-start">
-                  <span className="w-8 h-8 rounded-full bg-[#fed215]/10 border border-[#fed215]/30 flex items-center justify-center text-xs font-mono font-bold text-[#fed215] flex-shrink-0">
-                    03
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-[#f7f4ea]">Generate Dynamic QR Codes</h4>
-                    <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
-                      The generated QR code stores your social handles, bio, and Goa beach coordinates. When scanned, it loads your custom profile hub!
-                    </p>
-                  </div>
+              {/* Step 2 */}
+              <div className="flex gap-4 items-start p-4 rounded-xl border border-emerald-900/50 bg-[#012519]/30 hover:bg-[#012519]/50 transition-all hover:border-[#ff007f]/30 group shadow-md hover:translate-y-[-2px] duration-300">
+                <span className="w-9 h-9 rounded-xl bg-[#ff007f]/10 border border-[#ff007f]/30 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <svg className="w-4 h-4 text-[#ff007f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </span>
+                <div>
+                  <h4 className="text-sm font-bold text-[#f7f4ea] font-mono tracking-wide flex items-center gap-1.5">
+                    <span>Input Identity Details</span>
+                    <span className="text-[8px] font-mono text-[#ff007f]/75 bg-[#ff007f]/5 px-1.5 py-0.5 rounded border border-[#ff007f]/20 font-bold">02</span>
+                  </h4>
+                  <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
+                    Enter your name and developer track. Write a customized builder bio, select a cartoon avatar, and pick your Goa location.
+                  </p>
                 </div>
+              </div>
 
-                <div className="flex gap-4 items-start">
-                  <span className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-xs font-mono font-bold text-purple-300 flex-shrink-0">
-                    04
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-[#f7f4ea]">Join the Goa Hacker Map</h4>
-                    <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
-                      Saving your badge automatically drops your custom avatar pin onto the interactive coastline map of Goa for other builders to discover!
-                    </p>
-                  </div>
+              {/* Step 3 */}
+              <div className="flex gap-4 items-start p-4 rounded-xl border border-emerald-900/50 bg-[#012519]/30 hover:bg-[#012519]/50 transition-all hover:border-[#00f2fe]/30 group shadow-md hover:translate-y-[-2px] duration-300">
+                <span className="w-9 h-9 rounded-xl bg-[#00f2fe]/10 border border-[#00f2fe]/30 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <svg className="w-4 h-4 text-[#00f2fe]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                  </svg>
+                </span>
+                <div>
+                  <h4 className="text-sm font-bold text-[#f7f4ea] font-mono tracking-wide flex items-center gap-1.5">
+                    <span>Generate Dynamic QR Codes</span>
+                    <span className="text-[8px] font-mono text-[#00f2fe]/75 bg-[#00f2fe]/5 px-1.5 py-0.5 rounded border border-[#00f2fe]/20 font-bold">03</span>
+                  </h4>
+                  <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
+                    The generated QR code stores your social handles, bio, and Goa beach coordinates. When scanned, it loads your custom profile hub!
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="flex gap-4 items-start p-4 rounded-xl border border-emerald-900/50 bg-[#012519]/30 hover:bg-[#012519]/50 transition-all hover:border-purple-500/30 group shadow-md hover:translate-y-[-2px] duration-300">
+                <span className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+                  <svg className="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                </span>
+                <div>
+                  <h4 className="text-sm font-bold text-[#f7f4ea] font-mono tracking-wide flex items-center gap-1.5">
+                    <span>Join the Goa Hacker Map</span>
+                    <span className="text-[8px] font-mono text-purple-400/75 bg-purple-500/5 px-1.5 py-0.5 rounded border border-purple-500/20 font-bold">04</span>
+                  </h4>
+                  <p className="text-xs text-emerald-100/70 mt-1 leading-relaxed">
+                    Saving your badge automatically drops your custom avatar pin onto the interactive coastline map of Goa for other builders to discover!
+                  </p>
                 </div>
               </div>
             </div>
             
             {/* CTA Trigger */}
-            <div className="mt-8 pt-5 border-t border-emerald-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <span className="text-[10px] font-mono text-emerald-400">
-                Deadline: 11:59 pm, 13th August 2026
+            <div className="mt-8 pt-5 border-t border-emerald-900/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <span className="text-[9px] font-mono bg-pink-950/40 border border-[#ff007f]/30 px-3.5 py-1.5 text-[#ff007f] rounded-full font-bold uppercase tracking-wider shadow-inner">
+                ⚠️ Deadline: 11:59 pm, 13th August 2026
               </span>
               <button
                 type="button"
                 onClick={() => setView('builder')}
-                className="btn-spring bg-gradient-to-r from-[#e5b83b] via-[#ff007f] to-[#e5b83b] text-[#03080f] font-mono font-bold tracking-[0.15em] py-3.5 px-8 rounded-full text-xs cursor-pointer shadow-md uppercase hover:brightness-110"
+                className="btn-spring relative bg-gradient-to-r from-[#fed215] via-[#ff007f] to-[#fed215] text-[#021a11] font-mono font-bold tracking-[0.2em] py-3.5 px-8 rounded-full text-xs cursor-pointer shadow-[0_0_20px_rgba(255,0,127,0.3)] hover:shadow-[0_0_25px_rgba(255,0,127,0.55)] uppercase transition-all duration-300 hover:brightness-110 active:scale-95"
               >
-                Launch Badge Studio
+                Launch Badge Studio 🚀
               </button>
             </div>
           </div>
