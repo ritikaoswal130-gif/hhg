@@ -939,7 +939,7 @@ function BadgeCardComponent({
             </div>
 
             <span 
-              className="inline-block px-3 py-0.5 rounded-full text-[8px] font-bold tracking-[0.12em] uppercase font-mono"
+              className="inline-block px-3 py-0.5 rounded-full text-[8px] font-bold tracking-[0.12em] uppercase font-mono whitespace-nowrap"
               style={{ 
                 backgroundColor: `${theme.highlightColor}15`, 
                 border: `1px solid ${theme.highlightColor}`,
