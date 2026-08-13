@@ -1825,45 +1825,49 @@ export default function App() {
     }
   }
 
-  const shareOnX = () => {
+  const shareOnX = async () => {
     const targetRef = format === 'id' ? badgeRef : pfpRef
     if (!targetRef.current) return
     
     // 1. Proactively drop the user's pin on the map
     saveUserPinToMap()
     
-    // 2. Open X immediately in a new tab (0ms delay, bypasses popup blocker)
+    let copiedToClipboard = false
+    try {
+      // Use pixelRatio: 1.5 for rapid background rendering
+      const dataUrl = await toPng(targetRef.current, {
+        pixelRatio: 1.5,
+        style: {
+          transform: 'none',
+        }
+      })
+      
+      const res = await fetch(dataUrl)
+      const blob = await res.blob()
+      
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': blob
+          })
+        ])
+        copiedToClipboard = true
+      }
+    } catch (e) {
+      console.warn("Clipboard write failed or not supported in iframe:", e)
+    }
+
+    // 2. Alert blocks the thread to keep focus on parent tab, securing clipboard write
+    if (copiedToClipboard) {
+      alert("Badge image copied to clipboard! Click OK to open X, then press Ctrl+V inside the post box to attach your badge.")
+    } else {
+      alert("Opening X... Make sure to download your badge first and attach it to your post!")
+    }
+
+    // 3. Open X (bypasses popup blockers because user clicked OK on the alert)
     const tweetText = `Just created my Hacker House Goa 2026 Residency Badge! Excited to ship at the beach! 🌴🦀💻\n\nCreate your badge/PFP overlay here: https://hhg-umber.vercel.app\n#FrameInGoa #HackerHouseGoa`
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
     window.open(shareUrl, '_blank')
-    
-    // 3. Asynchronously render the badge card and copy to clipboard in the background
-    // We use a fast rendering factor (pixelRatio: 1.5) so it finishes within 100-200ms in the background
-    setTimeout(async () => {
-      try {
-        const dataUrl = await toPng(targetRef.current!, {
-          pixelRatio: 1.5,
-          style: {
-            transform: 'none',
-          }
-        })
-        
-        const res = await fetch(dataUrl)
-        const blob = await res.blob()
-        
-        if (navigator.clipboard && window.ClipboardItem) {
-          await navigator.clipboard.write([
-            new ClipboardItem({
-              'image/png': blob
-            })
-          ])
-          setToastMsg("Badge image copied to clipboard! Paste it inside X.")
-          setTimeout(() => setToastMsg(''), 4500)
-        }
-      } catch (e) {
-        console.warn("Background clipboard write failed:", e)
-      }
-    }, 50)
   }
 
   // Calculate mouse position percentage across screen (0 to 1) for the sunset beach animation
