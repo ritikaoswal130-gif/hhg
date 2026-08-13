@@ -1463,7 +1463,7 @@ export default function App() {
   const [qrCodeUrl, setQrCodeUrl] = useState('')
 
   // Map Pins state (mock pins + current user pin)
-  const [mapPins, setMapPins] = useState<MapPin[]>(MOCK_PINS)
+  const [mapPins, setMapPins] = useState<MapPin[]>([])
   const [selectedPinId, setSelectedPinId] = useState<string | null>(null)
   const [highlightedBeach, setHighlightedBeach] = useState<string>('')
 
@@ -1532,46 +1532,86 @@ export default function App() {
     })
   }, [name, role, builderTitle, github, twitter, avatarType, bio, activeTheme])
 
-  // 3. Update User pin inside LocalStorage and MapPins
-  const saveUserPinToMap = () => {
+  // 3. Update User pin inside Remote database and local mapPins
+  const saveUserPinToMap = (updatedName?: string, updatedRole?: string) => {
     const selectedBeachLoc = BEACH_LOCATIONS.find(b => b.id === beachLocation)
     if (!selectedBeachLoc) return
 
+    let userId = localStorage.getItem('hhg-user-id')
+    if (!userId) {
+      userId = 'user-' + Math.random().toString(36).slice(2)
+      localStorage.setItem('hhg-user-id', userId)
+    }
+
     const userPin: MapPin = {
-      id: 'user-pin',
-      name: name || 'Anon Builder (You)',
-      role: role || 'Hacking track',
+      id: userId,
+      name: updatedName || name || 'Anon Builder',
+      role: updatedRole || role || 'Hacking track',
       title: builderTitle || 'Resident',
       gh: github || '',
       tw: twitter || '',
       avatar: avatarType,
-      bio: bio || 'Loves chai, coding beachside, and shipping decentralized apps.',
+      bio: bio || 'Currently shipping code beachside at Hacker House Goa.',
       beach: selectedBeachLoc.label,
       x: selectedBeachLoc.x,
       y: selectedBeachLoc.y
     }
 
-    // Update pins state
-    setMapPins(prev => {
-      const filtered = prev.filter(p => p.id !== 'user-pin')
-      return [...filtered, userPin]
-    })
-    setSelectedPinId('user-pin')
-    localStorage.setItem('hhg-user-pin', JSON.stringify(userPin))
+    // Sync with remote database on kvdb.io to keep friends' pins in sync!
+    fetch('https://kvdb.io/hhg_ritika_badge_pins/pins')
+      .then(res => {
+        if (!res.ok) return []
+        return res.json()
+      })
+      .then(data => {
+        const currentPins = Array.isArray(data) ? data : []
+        const filtered = currentPins.filter((p: MapPin) => p.id !== userId)
+        const newPinsList = [...filtered, userPin]
+
+        return fetch('https://kvdb.io/hhg_ritika_badge_pins/pins', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newPinsList)
+        }).then(() => newPinsList)
+      })
+      .then(newPinsList => {
+        setMapPins(newPinsList)
+        setSelectedPinId(userId)
+        localStorage.setItem('hhg-user-pin', JSON.stringify(userPin))
+      })
+      .catch(err => {
+        console.error("Failed to sync pins:", err)
+        // Fallback to local
+        setMapPins(prev => [...prev.filter(p => p.id !== userId), userPin])
+      })
   }
 
-  // Load user pin from localStorage if present
+  // Load remote pins list on mount, and try to restore user pin location
   useEffect(() => {
-    const cached = localStorage.getItem('hhg-user-pin')
-    if (cached) {
-      try {
-        const pin = JSON.parse(cached) as MapPin
-        setMapPins(prev => [...prev.filter(p => p.id !== 'user-pin'), pin])
-        setBeachLocation(BEACH_LOCATIONS.find(b => b.label === pin.beach)?.id || 'anjuna')
-      } catch (err) {
-        console.error(err)
-      }
-    }
+    fetch('https://kvdb.io/hhg_ritika_badge_pins/pins')
+      .then(res => {
+        if (!res.ok) throw new Error()
+        return res.json()
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setMapPins(data)
+          
+          // Set beach dropdown based on user's saved pin if available
+          const userId = localStorage.getItem('hhg-user-id')
+          if (userId) {
+            const userSavedPin = data.find((p: MapPin) => p.id === userId)
+            if (userSavedPin) {
+              const matchedBeach = BEACH_LOCATIONS.find(b => b.label === userSavedPin.beach)
+              if (matchedBeach) setBeachLocation(matchedBeach.id)
+            }
+          }
+        }
+      })
+      .catch(err => {
+        console.log("Starting with empty map:", err)
+        setMapPins([])
+      })
   }, [])
 
   useEffect(() => {
@@ -2237,6 +2277,16 @@ export default function App() {
                             </option>
                           ))}
                         </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            saveUserPinToMap()
+                            alert("Pin dropped on map! Scroll down to see your location in Goa.")
+                          }}
+                          className="btn-spring mt-1.5 py-1 px-3 bg-[#ff007f]/10 border border-[#ff007f] text-[#ff007f] hover:bg-[#ff007f]/20 rounded-lg text-[9px] font-mono font-bold tracking-wider cursor-pointer shadow"
+                        >
+                          📌 Drop Pin on Map
+                        </button>
                       </div>
                     </div>
 
