@@ -1614,7 +1614,7 @@ export default function App() {
     }
 
     // Sync with remote database on kvdb.io to keep friends' pins in sync!
-    fetch('https://kvdb.io/hhg_ritika_badge_pins/pins')
+    fetch('https://kvdb.io/TJqCcrNXED9bGMjGqw2tN6/pins')
       .then(res => {
         if (!res.ok) return []
         return res.json()
@@ -1624,7 +1624,7 @@ export default function App() {
         const filtered = currentPins.filter((p: MapPin) => p.id !== userId)
         const newPinsList = [...filtered, userPin]
 
-        return fetch('https://kvdb.io/hhg_ritika_badge_pins/pins', {
+        return fetch('https://kvdb.io/TJqCcrNXED9bGMjGqw2tN6/pins', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newPinsList)
@@ -1644,7 +1644,7 @@ export default function App() {
 
   // Load remote pins list on mount, and try to restore user pin location
   useEffect(() => {
-    fetch('https://kvdb.io/hhg_ritika_badge_pins/pins')
+    fetch('https://kvdb.io/TJqCcrNXED9bGMjGqw2tN6/pins')
       .then(res => {
         if (!res.ok) throw new Error()
         return res.json()
